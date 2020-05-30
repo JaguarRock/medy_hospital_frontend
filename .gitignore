@@ -17,6 +17,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+<<<<<<< HEAD
+=======
+.eslintrc.js
+>>>>>>> 5a1a372cd55785e310472f61997af5f6023cc910
 
 npm-debug.log*
 yarn-debug.log*

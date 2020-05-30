@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+<<<<<<< HEAD
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "react": "^16.13.1",
@@ -16,6 +17,17 @@
     "react-validation": "^3.0.7",
     "react-validator": "^0.1.0",
     "validator": "^13.0.0"
+=======
+    "eslint-config-prettier": "^6.11.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
+>>>>>>> 5a1a372cd55785e310472f61997af5f6023cc910
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,5 +49,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+<<<<<<< HEAD
+=======
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^3.0.0",
+    "eslint": "^7.1.0",
+    "eslint-plugin-react": "^7.20.0"
+>>>>>>> 5a1a372cd55785e310472f61997af5f6023cc910
   }
 }
