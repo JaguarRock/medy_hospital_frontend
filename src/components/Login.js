@@ -1,94 +1,64 @@
-import React, { useRef, useState } from 'react';
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import userActions from '../actions/user.actions';
 
-import AuthService from "../services/auth.service";
 
-const required = (value) => {
-    if (!value) {
-        return (
-            <div>
-                채워줘요
-            </div>
-        )
+function Login() {
+    const [inputs, setInputs] = useState({
+        id: '',
+        password: '',
+    });
+
+    const [submitted, setSubmitted] = useState(false);
+    const { id, password } = inputs;
+    const loggingIn = useSelector(state => state.authenticationReducer.loggingIn);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(userActions.logout());
+    }, []);
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setInputs(inputs => ({ ...inputs, [name]: value }));
     }
-}
-
-const Login = (props) => {
-    const form = useRef();
-    const checkBtn = useRef();
-
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState("");
-
-    const onChangeUsername = (e) => {
-        const username = e.target.value;
-        setUsername(username);
-    }
-
-    const onChangePassword = (e) => {
-        const password = e.target.value;
-        setUsername(password);
-    }
-
-    const handleLogin = (e) => {
+    
+    function handleSubmit(e) {
         e.preventDefault();
-        setMessage("");
-        setLoading(true);
 
-        form.current.validateAll();
-
-        if (checkBtn.current.context._erros.length === 0) {
-            AuthService.login(username, password)
-                .then(() => {
-                    props.histroy.push("/profile");
-                    window.location.reload();
-                },
-                    (error) => {
-                        const resMessage = (error.response && error.response.data && 
-                            error.response.data.message) || error.message || error.toString();
-                        setLoading(false);
-                        setMessage(resMessage);
-                    }
-                )
-        } else {
-            setLoading(false);
+        setSubmitted(true);
+        if (id && password) {
+            dispatch(userActions.login(id, password));
         }
-    };
+    }
 
     return (
-        <div className="col-md-12">
-            <div className="card card-container">
-                <Form onSubmit={handleLogin} ref={form}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <Input type="text" className="form-control" name="username" value={username} onChange={onChangeUsername} validations={[required]}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <Input type="text" className="form-control" name="password" value={password} onChange={onChangePassword} validations={[required]}/>
-                    </div>
-                    <div className="form-group">
-                        <button className="btn btn-primary btn-block" disabled={loading}>
-                            {loading && (
-                                <span className="spinner-border spinner-border-sm"></span>
-                            )}
-                            <span>Login</span>
-                        </button>
-                    </div>
-                    {message && (
-                        <div className="form-group">
-                            <div className="alert alert-danger" role="alert">
-                                {message}
-                            </div>
-                        </div>
-                    )}
-                    <CheckButton style={{ display: "none"}} ref={checkBtn} />
-                </Form>
-            </div>
+        <div className="col-lg-8 offset-lg-2">
+            <h2>Login</h2>
+            <form name="form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label>아이디</label>
+                    <input type="text" name="id" value={id} onChange={handleChange} className={'form-control' + (submitted && !id ? ' is-invalid' : '')} />
+                    {submitted && !id &&
+                        <div className="invalid-feedback">아이디를 작성해주세요</div>
+                    }
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" value={password} onChange={handleChange} className={'form-control' + (submitted && !password ? ' is-invalid' : '')}/>
+                    {submitted && !password &&
+                        <div className="invalid-feedback">비밀번호를 작성해주세요</div>
+                    }
+                </div>
+                <div className="form-group">
+                    <button className="btn btn-primary">
+                        {loggingIn && <span className="spinner-border spinner-border-sm mr-1"></span>}
+                        Login
+                    </button>
+                    <Link to="/register" className="btn btn-link">Register</Link>
+                </div>
+            </form>
         </div>
     )
 }

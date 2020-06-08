@@ -1,52 +1,47 @@
-<<<<<<< HEAD
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Profile from "./components/Profile";
+import Home from "./components/Home";
+import history from "./helpers/history";
+import { useDispatch, useSelector } from 'react-redux';
+import alertActions from './actions/alert.actions';
+import PrivateRoute from './components/PrivateRoute';
+import { RootState } from './helpers/store';
 
 function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        {/* <Route path="/profile" component={Profile} /> */}
-      </Switch>
-    </Router>
-  )
-}
+  
+  const alert = useSelector(state => state.alertReducer);
 
-export default App;
-=======
-import React, { useEffect } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+  const dispatch = useDispatch();
+  useEffect(() => {
+    history.listen((location, action) => {
+      dispatch(alertActions.clear());
+    })
+  }, [])
 
-import { history } from './helpers/history';
-import Home from './components/Home';
-import LoginPage from './components/LoginPage';
-import RegisterPage from './components/RegisterPage';
-
-export default function App() {
   return (
     <div className="jumbotron">
       <div className="container">
         <div className="col-md-8 offset-md-2">
-          <BrowserRouter>
+          {alert.message &&
+            <div className={`alert ${alert.type}`}>{alert.message}</div>
+          }
+          <Router history={history}>
             <Switch>
-              <Route exact path="/" component={Home}/>
-              <Route path="/login" component={LoginPage}/>
-              <Route path="/register" component={RegisterPage}/>
+              <PrivateRoute exact path="/" component={Home} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+              <Redirect from="*" to="/" />
             </Switch>
-          </BrowserRouter>
+          </Router>
         </div>
       </div>
     </div>
+
   )
 }
->>>>>>> 5a1a372cd55785e310472f61997af5f6023cc910
+
+export default App;
